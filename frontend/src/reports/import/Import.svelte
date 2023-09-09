@@ -90,12 +90,12 @@
   /**
    * Open the extract dialog for the given file/importer combination.
    */
-  async function extract(filename: string, importer: string, shown: boolean = true) {
+  async function extract(filename: string, importer: string, shown = true) {
     const extractCacheKey = `${filename}:${importer}`;
     let cached = extractCache.get(extractCacheKey);
     if (!cached) {
       cached = await get("extract", { filename, importer });
-      if (!cached.length) {
+      if (!cached.length && shown) {
         notify("No entries to import from this file.", "warning");
         return;
       }

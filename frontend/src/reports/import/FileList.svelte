@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Entry } from "../../entries";
+  import { getDuplicates } from "../../entries";
   import AccountInput from "../../entry-forms/AccountInput.svelte";
   import { _ } from "../../i18n";
 
@@ -11,15 +12,14 @@
   export let remove: (name: string) => unknown;
   export let move: (name: string, a: string, newName: string) => unknown;
   export let extract: (name: string, importer: string, show?: boolean) => unknown;
-  import { getDuplicates } from "../../entries";
 
-  function entryDescription(entries: Entry[]): String {
-    var duplicates = getDuplicates(entries);
+  function entryDescription(entries: Entry[]): string {
+    const duplicates = getDuplicates(entries);
     return `${entries.length} entries, ${entries.length-duplicates.length} new.`;
   }
 
-  function extractAll(files: ProcessedImportableFile[]) {
-    files.map((file) => file.importers.map((importer) => extract(file.name, importer.importer_name, false)))
+  function extractAll(filesToImport: ProcessedImportableFile[]) {
+    filesToImport.map((file) => file.importers.map((importer) => extract(file.name, importer.importer_name, false)))
   }
 </script>
 
@@ -27,7 +27,7 @@
 <span class="spacer"/>
 <button
 type="button"
-on:click={() => extractAll(files)}
+on:click={() => {extractAll(files)}}
 >Extract all
 </button>
 </div>
@@ -71,7 +71,7 @@ on:click={() => extractAll(files)}
             : _("Extract")}
         </button>
         {#if extractCache.get(`${file.name}:${info.importer_name}`)}
-        {@const extract = extractCache.get(`${file.name}:${info.importer_name}`) || [] }
+        {@const extractFile = extractCache.get(`${file.name}:${info.importer_name}`) ?? [] }
           <button
             type="button"
             on:click={() => {
@@ -81,7 +81,7 @@ on:click={() => extractAll(files)}
           >
             {_("Clear")}
           </button>
-          {entryDescription(extract)}
+          {entryDescription(extractFile)}
         {:else}
         {info.importer_name}
         {/if}
