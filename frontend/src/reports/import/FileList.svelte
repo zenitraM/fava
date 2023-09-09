@@ -11,8 +11,24 @@
   export let remove: (name: string) => unknown;
   export let move: (name: string, a: string, newName: string) => unknown;
   export let extract: (name: string, importer: string) => unknown;
+  import { getDuplicates } from "../../entries";
+
+  function entryDescription(entries: Entry[]): String {
+    var duplicates = getDuplicates(entries);
+    return `${entries.length} entries, ${entries.length-duplicates.length} new.`;
+  }
+
+  function extractAll(files: ProcessedImportableFile[]) {
+    files.map((file) => file.importers.map((importer) => extract(file.name, importer.importer_name)))
+  }
 </script>
 
+<button
+type="button"
+class="unset"
+on:click={() => extractAll(files)}
+>Extract all
+</button>
 {#each files as file}
   <div class="header" title={file.name} class:selected={selected === file.name}>
     <button
@@ -53,6 +69,7 @@
             : _("Extract")}
         </button>
         {#if extractCache.get(`${file.name}:${info.importer_name}`)}
+        {@const extract = extractCache.get(`${file.name}:${info.importer_name}`) || [] }
           <button
             type="button"
             on:click={() => {
@@ -62,8 +79,10 @@
           >
             {_("Clear")}
           </button>
-        {/if}
+          {entryDescription(extract)}
+        {:else}
         {info.importer_name}
+        {/if}
       {/if}
     </div>
   {/each}
