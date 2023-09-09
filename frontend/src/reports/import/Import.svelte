@@ -162,7 +162,6 @@
       {/if}
       {#if importableFiles.length > 0}
         <div>
-          <h2>{_("Importable Files")}</h2>
           <FileList
             files={importableFiles}
             {extractCache}

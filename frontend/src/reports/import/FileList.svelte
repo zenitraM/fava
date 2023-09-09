@@ -24,12 +24,13 @@
 </script>
 
 <div class="flex-row">
-<span class="spacer"/>
-<button
-type="button"
-on:click={() => {extractAll(files)}}
->Extract all
-</button>
+  <h2>{_("Importable Files")}</h2>
+  <span class="spacer"/>
+  <button
+  type="button"
+  on:click={() => {extractAll(files)}}
+  >Extract all
+  </button>
 </div>
 {#each files as file}
   <div class="header" title={file.name} class:selected={selected === file.name}>
