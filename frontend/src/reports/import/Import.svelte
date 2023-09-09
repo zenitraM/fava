@@ -27,6 +27,9 @@
   /** The array of entries to show the modal for. */
   let entries: Entry[] = [];
 
+  /** Whether to open the entries extract or not. */
+  let opened: boolean;
+
   /** Name of the currently selected file. */
   let selected: string | null = null;
 
@@ -87,7 +90,7 @@
   /**
    * Open the extract dialog for the given file/importer combination.
    */
-  async function extract(filename: string, importer: string) {
+  async function extract(filename: string, importer: string, shown: boolean = true) {
     const extractCacheKey = `${filename}:${importer}`;
     let cached = extractCache.get(extractCacheKey);
     if (!cached) {
@@ -100,6 +103,7 @@
       extractCache = extractCache;
     }
     entries = cached;
+    opened = shown;
   }
 
   /**
@@ -149,6 +153,7 @@
       entries = [];
     }}
     {save}
+    {opened}
   />
   <div class="fixed-fullsize-container">
     <div class="filelist">

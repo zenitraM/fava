@@ -10,7 +10,7 @@
   export let selected: string | null;
   export let remove: (name: string) => unknown;
   export let move: (name: string, a: string, newName: string) => unknown;
-  export let extract: (name: string, importer: string) => unknown;
+  export let extract: (name: string, importer: string, show?: boolean) => unknown;
   import { getDuplicates } from "../../entries";
 
   function entryDescription(entries: Entry[]): String {
@@ -19,16 +19,18 @@
   }
 
   function extractAll(files: ProcessedImportableFile[]) {
-    files.map((file) => file.importers.map((importer) => extract(file.name, importer.importer_name)))
+    files.map((file) => file.importers.map((importer) => extract(file.name, importer.importer_name, false)))
   }
 </script>
 
+<div class="flex-row">
+<span class="spacer"/>
 <button
 type="button"
-class="unset"
 on:click={() => extractAll(files)}
 >Extract all
 </button>
+</div>
 {#each files as file}
   <div class="header" title={file.name} class:selected={selected === file.name}>
     <button

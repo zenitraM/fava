@@ -8,10 +8,11 @@
   export let entries: EntryType[];
   export let save: () => void;
   export let close: () => void;
+  export let opened: boolean;
 
   let currentIndex = 0;
 
-  $: shown = entries.length > 0;
+  $: shown = opened && entries.length > 0;
   $: entry = entries[currentIndex];
   $: duplicate = entry && isDuplicate(entry);
   $: duplicates = entries.filter(isDuplicate).length;
