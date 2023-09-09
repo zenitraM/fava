@@ -244,3 +244,10 @@ export const entryValidator: Validator<Entry> = union(
 export function isDuplicate(e: Entry): boolean {
   return !!e.meta.__duplicate__;
 }
+
+/**
+ * Returns duplicate entries for a given file.
+ */
+export function getDuplicates(entries: Entry[]): Entry[] {
+  return entries.filter(isDuplicate);
+}
